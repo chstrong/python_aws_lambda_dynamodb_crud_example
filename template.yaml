@@ -1,0 +1,112 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  course_subscriptions_api
+
+  API to handle course subscriptions of a user
+
+Parameters:
+  ENVIRONMENT:
+    Type: String
+    Description: AWS Environment where code is being executed (AWS_SAM_LOCAL or AWS)
+    Default: 'AWS_SAM_LOCAL'
+
+  DYNAMODB_DEV_URI:
+    Type: String
+    Description: AWS local DynamoDB instance URI (will only be used if AWSENVNAME is AWS_SAM_LOCAL)
+    Default: 'http://docker.for.mac.host.internal:8000'
+
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  CourseSubscriptionsFunctionListAll:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: course_subscriptions/
+      Handler: list_all.lambda_handler
+      Runtime: python3.8
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref ENVIRONMENT
+          DYNAMODB_DEV_URI: !Ref DYNAMODB_DEV_URI
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /course-subscriptions/list-all
+            Method: get            
+
+  CourseSubscriptionsFunctionListPk:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: course_subscriptions/
+      Handler: list_pk.lambda_handler
+      Runtime: python3.8
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref ENVIRONMENT
+          DYNAMODB_DEV_URI: !Ref DYNAMODB_DEV_URI
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /course-subscriptions/list-pk
+            Method: get   
+
+  CourseSubscriptionsFunctionCreate:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: course_subscriptions/
+      Handler: create.lambda_handler
+      Runtime: python3.8
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref ENVIRONMENT
+          DYNAMODB_DEV_URI: !Ref DYNAMODB_DEV_URI
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /course-subscriptions/create
+            Method: post   
+
+  CourseSubscriptionsFunctionUpdate:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: course_subscriptions/
+      Handler: update.lambda_handler
+      Runtime: python3.8
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref ENVIRONMENT
+          DYNAMODB_DEV_URI: !Ref DYNAMODB_DEV_URI
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /course-subscriptions/update
+            Method: post  
+
+  CourseSubscriptionsFunctionDelete:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: course_subscriptions/
+      Handler: delete.lambda_handler
+      Runtime: python3.8
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref ENVIRONMENT
+          DYNAMODB_DEV_URI: !Ref DYNAMODB_DEV_URI
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /course-subscriptions/delete
+            Method: delete
