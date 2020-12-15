@@ -16,6 +16,11 @@ class Helper:
         else:
             return False
 
+    def validate_uid(self,uid):
+        if not uid.startswith("U"):
+            return False
+        return True
+
     # Check if the payload fields are valid
     def validate_payload(self, json_map):
         keys = json_map.keys()

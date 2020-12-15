@@ -33,7 +33,7 @@ Resources:
           ENVIRONMENT: !Ref ENVIRONMENT
           DYNAMODB_DEV_URI: !Ref DYNAMODB_DEV_URI
       Events:
-        HelloWorld:
+        ListAllApi:
           Type: Api
           Properties:
             Path: /course-subscriptions/list-all
@@ -51,10 +51,10 @@ Resources:
           ENVIRONMENT: !Ref ENVIRONMENT
           DYNAMODB_DEV_URI: !Ref DYNAMODB_DEV_URI
       Events:
-        HelloWorld:
+        ListPkApi:
           Type: Api
           Properties:
-            Path: /course-subscriptions/list-pk
+            Path: /course-subscriptions/list-pk/{uid}
             Method: get   
 
   CourseSubscriptionsFunctionCreate:
@@ -69,7 +69,7 @@ Resources:
           ENVIRONMENT: !Ref ENVIRONMENT
           DYNAMODB_DEV_URI: !Ref DYNAMODB_DEV_URI
       Events:
-        HelloWorld:
+        CreateAPI:
           Type: Api
           Properties:
             Path: /course-subscriptions/create
@@ -87,7 +87,7 @@ Resources:
           ENVIRONMENT: !Ref ENVIRONMENT
           DYNAMODB_DEV_URI: !Ref DYNAMODB_DEV_URI
       Events:
-        HelloWorld:
+        UpdateApi:
           Type: Api
           Properties:
             Path: /course-subscriptions/update
@@ -105,8 +105,26 @@ Resources:
           ENVIRONMENT: !Ref ENVIRONMENT
           DYNAMODB_DEV_URI: !Ref DYNAMODB_DEV_URI
       Events:
-        HelloWorld:
+        DeleteApi:
           Type: Api
           Properties:
             Path: /course-subscriptions/delete
             Method: delete
+
+  CourseSubscriptionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: CourseSubscriptions
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S          
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: PK
+          KeyType: RANGE          
+      ProvisionedThroughput:
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 1
