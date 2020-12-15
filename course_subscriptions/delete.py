@@ -8,6 +8,7 @@ def lambda_handler(event, context):
     # Read environment variables from template.yaml
     environment = os.environ['ENVIRONMENT']
     dynamodb_dev_uri = os.environ['DYNAMODB_DEV_URI']
+    path_parameters = event['pathParameters']
 
     # Create helper object (see helper.py)
     hlp = Helper()
@@ -19,27 +20,30 @@ def lambda_handler(event, context):
         dynamodb = boto3.resource('dynamodb')
 
     # Check if the right http method is used, if not then return Forbidden status code
-    if event['httpMethod'] != "POST":
+    if event['httpMethod'] != "DELETE":
         return hlp.json_error("Wrong request method!")
 
-    # Transform http body into a json_map
-    json_map = hlp.body_to_json(event['body'])
+    print(path_parameters)
 
-    # Validate the json payload
-    if not hlp.validate_payload(json_map):
-        return hlp.json_error("Validation failed!")
+    # Validate the pk id passed through the url
+    if not hlp.validate_pk(path_parameters['pk']):
+        return hlp.json_error("An error occurred.")
+
+    # Validate the sk id passed through the url
+    if not hlp.validate_sk(path_parameters['sk']):
+        return hlp.json_error("An error occurred.")    
 
     # Execute delete query on DynamoDB table
     table = dynamodb.Table('CourseSubscriptions')
     deleted_item = table.delete_item(
         Key={
-            'PK': json_map['PK'],
-            'SK': json_map['SK']
+            'PK': path_parameters['pk'],
+            'SK': path_parameters['sk']
         },
     )
 
     # If DynamoDB could delete the record, we will receive a 200 status code, and can return success.
     if deleted_item['ResponseMetadata']['HTTPStatusCode'] == 200:
-        return hlp.json_success(json_map)
+        return hlp.json_success({"message": "success"})
     else:
         return hlp.json_error("An error occurred. The item could not be deleted!")

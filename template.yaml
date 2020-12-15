@@ -54,7 +54,7 @@ Resources:
         ListPkApi:
           Type: Api
           Properties:
-            Path: /course-subscriptions/list-pk/{uid}
+            Path: /course-subscriptions/list-pk/{pk}
             Method: get   
 
   CourseSubscriptionsFunctionCreate:
@@ -108,7 +108,7 @@ Resources:
         DeleteApi:
           Type: Api
           Properties:
-            Path: /course-subscriptions/delete
+            Path: /course-subscriptions/delete/{pk}/{sk}
             Method: delete
 
   CourseSubscriptionsTable:

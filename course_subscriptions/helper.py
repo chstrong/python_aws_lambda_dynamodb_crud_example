@@ -16,8 +16,13 @@ class Helper:
         else:
             return False
 
-    def validate_uid(self,uid):
-        if not uid.startswith("U"):
+    def validate_pk(self,pk):
+        if not pk.startswith("U"):
+            return False
+        return True
+
+    def validate_sk(self,sk):
+        if not sk.startswith("C"):
             return False
         return True
 

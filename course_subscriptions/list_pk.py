@@ -21,14 +21,14 @@ def lambda_handler(event, context):
     else:
         dynamodb = boto3.resource('dynamodb')
 
-    # Validate the user id passed through the url
-    if not hlp.validate_uid(path_parameters['uid']):
-        return hlp.json_error("An error occurred.")
+    # Validate the pk id passed through the url
+    if not hlp.validate_pk(path_parameters['pk']):
+        return hlp.json_error("An error occurred.") 
 
     # Execute table scan query on DynamoDB table 
     table = dynamodb.Table('CourseSubscriptions')
     response = table.query(
-        KeyConditionExpression=Key('PK').eq(path_parameters['uid'])
+        KeyConditionExpression=Key('PK').eq(path_parameters['pk'])
     )
     data = response['Items']
 
